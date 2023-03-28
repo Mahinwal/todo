@@ -1,0 +1,65 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Task List 2023</title>
+	<link rel="stylesheet" href="{% static 'app/css/main.css' %}" />
+</head>
+<body>
+	
+	<header>
+		<h1>Task List 2023</h1>
+		<form action="{% url 'todo-add' %}" method="post" id="new-task-form">
+            {% csrf_token %}
+			<input 
+				type="text" 
+				name="title"
+				id="new-task-input" 
+				placeholder="What do you have planned?" required/>
+			<input 
+				type="submit"
+				id="new-task-submit" 
+				value="Add task" />
+		</form>
+	</header>
+	<main>
+		<section class="task-list">
+			<h2>Tasks</h2>
+
+			<div id="tasks">
+                {% for task in tasks reversed%}
+                <form action="{% url 'todo-update' %}" method="post">
+                    {% csrf_token %}
+				<div class="task">
+					<div class="content">
+						<input 
+							type="text" 
+                            name="title"
+							class="text" 
+							value="{{task.title}}"
+							readonly>
+                        <input type="hidden" name="id" value="{{task.id}}">
+					</div>
+					<div class="actions">
+						<label class="edit">Edit</label>
+                    </form>
+                        <form action="{% url 'todo-delete' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{task.id}}">   
+						    <button type="submit" class="delete">Delete</button>
+                    </form>
+					</div>
+				</div>
+            
+                {% endfor %}
+			</div>
+		</section>
+	</main>
+
+	<script src="{% static 'app/js/main.js' %}"></script>
+</body>
+</html>
